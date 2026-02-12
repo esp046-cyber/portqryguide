@@ -1,0 +1,2187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PortQry & Telnet Guide 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            margin: 1%;
+            padding: 0;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            padding: 12px 1%;
+            border-radius: 8px;
+            margin-bottom: 1%;
+            border-left: 4px solid #00d9ff;
+        }
+        
+        h1 {
+            font-size: 1.3em;
+            color: #00d9ff;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 0.75em;
+            color: #a0a0a0;
+        }
+        
+        nav {
+            background: #1a1a2e;
+            padding: 8px 1%;
+            border-radius: 6px;
+            margin-bottom: 1%;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            border: 1px solid #0f3460;
+        }
+        
+        .tab-btn {
+            background: #16213e;
+            color: #00d9ff;
+            border: 1px solid #0f3460;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 80px;
+        }
+        
+        .tab-btn:hover {
+            background: #0f3460;
+            border-color: #00d9ff;
+        }
+        
+        .tab-btn.active {
+            background: #00d9ff;
+            color: #1a1a2e;
+            font-weight: 600;
+        }
+        
+        .content-section {
+            display: none;
+            background: #16213e;
+            padding: 12px 1%;
+            border-radius: 8px;
+            margin-bottom: 1%;
+            border-left: 3px solid #00d9ff;
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            font-size: 1.1em;
+            color: #00d9ff;
+            margin: 12px 0 8px 0;
+            padding-bottom: 4px;
+            border-bottom: 2px solid #0f3460;
+        }
+        
+        h3 {
+            font-size: 0.95em;
+            color: #ffa726;
+            margin: 10px 0 6px 0;
+        }
+        
+        p {
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+        }
+        
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid #00d9ff;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 8px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75em;
+        }
+        
+        .code-block code {
+            color: #00ff00;
+        }
+        
+        .command {
+            color: #00d9ff;
+            font-weight: bold;
+        }
+        
+        .note {
+            background: #1a3a52;
+            border-left: 3px solid #ffa726;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+        
+        .warning {
+            background: #4a1a1a;
+            border-left: 3px solid #ff5252;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+        
+        .tip {
+            background: #1a4a1a;
+            border-left: 3px solid #4caf50;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+        
+        ul, ol {
+            margin-left: 18px;
+            margin-bottom: 8px;
+            font-size: 0.85em;
+        }
+        
+        li {
+            margin-bottom: 4px;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #00d9ff 0%, #0099cc 100%);
+            color: #1a1a2e;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 12px;
+            transition: transform 0.2s;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.02);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0;
+            font-size: 0.75em;
+        }
+        
+        th, td {
+            border: 1px solid #0f3460;
+            padding: 6px;
+            text-align: left;
+        }
+        
+        th {
+            background: #0f3460;
+            color: #00d9ff;
+            font-weight: 600;
+        }
+        
+        td {
+            background: #1a1a2e;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            background: #1a1a2e;
+            border: 1px solid #00d9ff;
+            border-radius: 4px;
+            color: #e0e0e0;
+            font-size: 0.85em;
+            margin-bottom: 1%;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 12px;
+            color: #808080;
+            font-size: 0.7em;
+            margin-top: 1%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔌 PortQry & Telnet Guide 2026</h1>
+            <div class="subtitle">Complete Beginners Guide to Network Port Testing</div>
+        </header>
+
+        <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search topics...">
+
+        <nav>
+            <button class="tab-btn active" onclick="showTab('portqry-intro')">PortQry Intro</button>
+            <button class="tab-btn" onclick="showTab('portqry-usage')">Usage</button>
+            <button class="tab-btn" onclick="showTab('telnet-intro')">Telnet Intro</button>
+            <button class="tab-btn" onclick="showTab('telnet-usage')">Telnet Usage</button>
+            <button class="tab-btn" onclick="showTab('examples')">Examples</button>
+            <button class="tab-btn" onclick="showTab('troubleshooting')">Troubleshooting</button>
+            <button class="tab-btn" onclick="showTab('webapp-troubleshoot')">Web Apps</button>
+            <button class="tab-btn" onclick="showTab('active-directory')">Active Directory</button>
+            <button class="tab-btn" onclick="showTab('email-complete')">Email Systems</button>
+            <button class="tab-btn" onclick="showTab('databases')">Databases</button>
+            <button class="tab-btn" onclick="showTab('cloud-services')">Cloud Services</button>
+            <button class="tab-btn" onclick="showTab('security-audit')">Security Audit</button>
+        </nav>
+
+        <!-- PortQry Introduction -->
+        <div id="portqry-intro" class="content-section active">
+            <h2>📘 What is PortQry?</h2>
+            <p>PortQry is a command-line tool from Microsoft that helps you troubleshoot TCP/IP connectivity issues. It's essential for network administrators and IT professionals in 2026.</p>
+            
+            <h3>Key Features</h3>
+            <ul>
+                <li>Query TCP and UDP ports on remote computers</li>
+                <li>Check port status (listening, filtered, not listening)</li>
+                <li>Support for multiple protocols (DNS, LDAP, RPC, SQL, etc.)</li>
+                <li>No installation required - portable executable</li>
+                <li>Works on Windows Server and Desktop OS</li>
+            </ul>
+
+            <h3>Installation (2026)</h3>
+            <div class="code-block">
+                <code># Download from Microsoft (Free)</code><br>
+                <code class="command">https://www.microsoft.com/download/portqry</code><br><br>
+                <code># Or use Winget (Windows Package Manager)</code><br>
+                <code class="command">winget install Microsoft.PortQry</code><br><br>
+                <code># Extract and run from any folder</code><br>
+                <code class="command">portqry.exe -?</code>
+            </div>
+
+            <div class="note">
+                <strong>💡 Note:</strong> PortQry v2.0+ is the recommended version for 2026. It includes enhanced IPv6 support and better protocol detection.
+            </div>
+
+            <h3>Basic Syntax</h3>
+            <div class="code-block">
+                <code class="command">portqry -n [target] -p [protocol] -e [port]</code>
+            </div>
+
+            <h3>Port States Explained</h3>
+            <table>
+                <tr>
+                    <th>State</th>
+                    <th>Meaning</th>
+                </tr>
+                <tr>
+                    <td>LISTENING</td>
+                    <td>Port is open and accepting connections</td>
+                </tr>
+                <tr>
+                    <td>NOT LISTENING</td>
+                    <td>Port is closed or no service running</td>
+                </tr>
+                <tr>
+                    <td>FILTERED</td>
+                    <td>Port is blocked by firewall or no response</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- PortQry Usage -->
+        <div id="portqry-usage" class="content-section">
+            <h2>⚙️ PortQry Usage Guide</h2>
+
+            <h3>Common Parameters</h3>
+            <table>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>-n</td>
+                    <td>Target hostname or IP address</td>
+                </tr>
+                <tr>
+                    <td>-p</td>
+                    <td>Protocol: TCP, UDP, or BOTH</td>
+                </tr>
+                <tr>
+                    <td>-e</td>
+                    <td>Single port to query</td>
+                </tr>
+                <tr>
+                    <td>-r</td>
+                    <td>Range of ports (e.g., 100:200)</td>
+                </tr>
+                <tr>
+                    <td>-o</td>
+                    <td>Multiple specific ports (e.g., 80,443,3389)</td>
+                </tr>
+                <tr>
+                    <td>-l</td>
+                    <td>Output to log file</td>
+                </tr>
+                <tr>
+                    <td>-y</td>
+                    <td>Overwrite existing log file</td>
+                </tr>
+            </table>
+
+            <h3>Example Commands</h3>
+            
+            <p><strong>Check single port:</strong></p>
+            <div class="code-block">
+                <code class="command">portqry -n server.domain.com -p tcp -e 80</code>
+            </div>
+
+            <p><strong>Check multiple ports:</strong></p>
+            <div class="code-block">
+                <code class="command">portqry -n 192.168.1.100 -p tcp -o 80,443,3389,8080</code>
+            </div>
+
+            <p><strong>Check port range:</strong></p>
+            <div class="code-block">
+                <code class="command">portqry -n 10.0.0.50 -p tcp -r 1:1024</code>
+            </div>
+
+            <p><strong>Check UDP port:</strong></p>
+            <div class="code-block">
+                <code class="command">portqry -n dns-server.local -p udp -e 53</code>
+            </div>
+
+            <p><strong>Check both TCP and UDP:</strong></p>
+            <div class="code-block">
+                <code class="command">portqry -n mailserver.com -p both -e 25</code>
+            </div>
+
+            <p><strong>Save to log file:</strong></p>
+            <div class="code-block">
+                <code class="command">portqry -n 192.168.1.10 -p tcp -e 443 -l portqry.log -y</code>
+            </div>
+
+            <h3>Common Ports to Test (2026)</h3>
+            <table>
+                <tr>
+                    <th>Port</th>
+                    <th>Service</th>
+                    <th>Protocol</th>
+                </tr>
+                <tr><td>21</td><td>FTP</td><td>TCP</td></tr>
+                <tr><td>22</td><td>SSH</td><td>TCP</td></tr>
+                <tr><td>23</td><td>Telnet</td><td>TCP</td></tr>
+                <tr><td>25</td><td>SMTP</td><td>TCP</td></tr>
+                <tr><td>53</td><td>DNS</td><td>TCP/UDP</td></tr>
+                <tr><td>80</td><td>HTTP</td><td>TCP</td></tr>
+                <tr><td>443</td><td>HTTPS</td><td>TCP</td></tr>
+                <tr><td>3389</td><td>RDP</td><td>TCP</td></tr>
+                <tr><td>1433</td><td>SQL Server</td><td>TCP</td></tr>
+                <tr><td>3306</td><td>MySQL</td><td>TCP</td></tr>
+            </table>
+
+            <div class="tip">
+                <strong>✅ Tip:</strong> Always test with both TCP and UDP for DNS (port 53) as it uses both protocols.
+            </div>
+        </div>
+
+        <!-- Telnet Introduction -->
+        <div id="telnet-intro" class="content-section">
+            <h2>📡 What is Telnet?</h2>
+            <p>Telnet is a network protocol and command-line tool used to establish remote connections and test port connectivity. While it's not secure for remote administration (SSH is preferred), it remains valuable for network troubleshooting in 2026.</p>
+
+            <h3>Why Use Telnet for Port Testing?</h3>
+            <ul>
+                <li>Quick way to test if a TCP port is open</li>
+                <li>Built into most operating systems</li>
+                <li>Immediate feedback on connection status</li>
+                <li>Can send raw commands to services</li>
+                <li>Lightweight and fast</li>
+            </ul>
+
+            <h3>Enabling Telnet Client (Windows)</h3>
+            <div class="code-block">
+                <code># Open PowerShell as Administrator</code><br>
+                <code class="command">dism /online /Enable-Feature /FeatureName:TelnetClient</code><br><br>
+                <code># Or use Windows Features GUI</code><br>
+                <code>Control Panel > Programs > Turn Windows features on or off</code><br>
+                <code>☑ Telnet Client</code>
+            </div>
+
+            <h3>Checking if Telnet is Installed</h3>
+            <div class="code-block">
+                <code class="command">telnet</code><br>
+                <code># If installed, you'll see: Welcome to Microsoft Telnet Client</code>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Security Warning:</strong> Never use Telnet for remote login in production. All data, including passwords, is sent in plain text. Use SSH instead for secure connections.
+            </div>
+
+            <h3>Telnet vs PortQry</h3>
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>Telnet</th>
+                    <th>PortQry</th>
+                </tr>
+                <tr>
+                    <td>TCP Support</td>
+                    <td>✅ Yes</td>
+                    <td>✅ Yes</td>
+                </tr>
+                <tr>
+                    <td>UDP Support</td>
+                    <td>❌ No</td>
+                    <td>✅ Yes</td>
+                </tr>
+                <tr>
+                    <td>Built-in</td>
+                    <td>✅ Most OS</td>
+                    <td>❌ Download</td>
+                </tr>
+                <tr>
+                    <td>Detailed Info</td>
+                    <td>❌ Limited</td>
+                    <td>✅ Extensive</td>
+                </tr>
+                <tr>
+                    <td>Speed</td>
+                    <td>⚡ Very Fast</td>
+                    <td>⚡ Fast</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Telnet Usage -->
+        <div id="telnet-usage" class="content-section">
+            <h2>🔧 Telnet Usage Guide</h2>
+
+            <h3>Basic Syntax</h3>
+            <div class="code-block">
+                <code class="command">telnet [hostname/IP] [port]</code>
+            </div>
+
+            <h3>Successful Connection</h3>
+            <p>When a port is OPEN and accepting connections:</p>
+            <div class="code-block">
+                <code class="command">telnet google.com 80</code><br>
+                <code>Trying 142.250.185.46...</code><br>
+                <code>Connected to google.com.</code><br>
+                <code>Escape character is '^]'.</code>
+            </div>
+            <div class="tip">
+                <strong>✅ Success:</strong> Screen goes blank or shows service banner = Port is OPEN
+            </div>
+
+            <h3>Failed Connection</h3>
+            <p>When a port is CLOSED or FILTERED:</p>
+            <div class="code-block">
+                <code class="command">telnet 192.168.1.100 8080</code><br>
+                <code>Trying 192.168.1.100...</code><br>
+                <code>Could not open connection to the host, on port 8080:</code><br>
+                <code>Connect failed</code>
+            </div>
+            <div class="warning">
+                <strong>❌ Failed:</strong> Connection error = Port is CLOSED or BLOCKED
+            </div>
+
+            <h3>Common Test Scenarios</h3>
+
+            <p><strong>Test Web Server (HTTP):</strong></p>
+            <div class="code-block">
+                <code class="command">telnet www.example.com 80</code><br>
+                <code># After connection, type:</code><br>
+                <code>GET / HTTP/1.1</code><br>
+                <code>Host: www.example.com</code><br>
+                <code>[Press Enter twice]</code>
+            </div>
+
+            <p><strong>Test HTTPS Server:</strong></p>
+            <div class="code-block">
+                <code class="command">telnet secure.example.com 443</code><br>
+                <code># Connection opens = SSL/TLS port is accessible</code>
+            </div>
+
+            <p><strong>Test Email Server (SMTP):</strong></p>
+            <div class="code-block">
+                <code class="command">telnet mail.example.com 25</code><br>
+                <code># You should see SMTP banner:</code><br>
+                <code>220 mail.example.com ESMTP Ready</code>
+            </div>
+
+            <p><strong>Test Remote Desktop:</strong></p>
+            <div class="code-block">
+                <code class="command">telnet 192.168.1.50 3389</code>
+            </div>
+
+            <p><strong>Test SSH Server:</strong></p>
+            <div class="code-block">
+                <code class="command">telnet server.example.com 22</code><br>
+                <code># You should see SSH banner:</code><br>
+                <code>SSH-2.0-OpenSSH_8.9</code>
+            </div>
+
+            <h3>Exiting Telnet</h3>
+            <div class="code-block">
+                <code># Method 1: Press Ctrl + ]</code><br>
+                <code>Then type: quit</code><br><br>
+                <code># Method 2: Press Ctrl + C (force close)</code><br><br>
+                <code># Method 3: If connected:</code><br>
+                <code>Ctrl + ] then type: close</code>
+            </div>
+
+            <h3>Telnet Commands</h3>
+            <table>
+                <tr>
+                    <th>Command</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>open [host] [port]</td>
+                    <td>Open connection from telnet prompt</td>
+                </tr>
+                <tr>
+                    <td>close</td>
+                    <td>Close current connection</td>
+                </tr>
+                <tr>
+                    <td>quit</td>
+                    <td>Exit telnet</td>
+                </tr>
+                <tr>
+                    <td>status</td>
+                    <td>Show connection status</td>
+                </tr>
+                <tr>
+                    <td>set</td>
+                    <td>Set operating parameters</td>
+                </tr>
+            </table>
+
+            <div class="note">
+                <strong>💡 Pro Tip:</strong> Use PowerShell's Test-NetConnection for modern Windows port testing:
+                <div class="code-block" style="margin-top: 8px;">
+                    <code class="command">Test-NetConnection -ComputerName server.com -Port 443</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Examples -->
+        <div id="examples" class="content-section">
+            <h2>📋 Real-World Examples</h2>
+
+            <h3>Scenario 1: Web Server Not Accessible</h3>
+            <div class="code-block">
+                <code># Step 1: Test with Telnet</code><br>
+                <code class="command">telnet webserver.local 80</code><br><br>
+                <code># Step 2: If failed, use PortQry for details</code><br>
+                <code class="command">portqry -n webserver.local -p tcp -e 80</code><br><br>
+                <code># Step 3: Check if firewall is blocking</code><br>
+                <code class="command">portqry -n webserver.local -p tcp -e 80 -l firewall-test.log</code>
+            </div>
+
+            <h3>Scenario 2: Database Connection Issues</h3>
+            <div class="code-block">
+                <code># Test SQL Server (1433)</code><br>
+                <code class="command">telnet sql-server.domain.com 1433</code><br><br>
+                <code># Detailed SQL Server check</code><br>
+                <code class="command">portqry -n sql-server.domain.com -p tcp -e 1433</code><br><br>
+                <code># Test MySQL (3306)</code><br>
+                <code class="command">telnet mysql-db.local 3306</code>
+            </div>
+
+            <h3>Scenario 3: Email Server Troubleshooting</h3>
+            <div class="code-block">
+                <code># Test SMTP (25)</code><br>
+                <code class="command">telnet mail.company.com 25</code><br>
+                <code>HELO test</code><br>
+                <code>QUIT</code><br><br>
+                <code># Test IMAP (143)</code><br>
+                <code class="command">portqry -n mail.company.com -p tcp -e 143</code><br><br>
+                <code># Test POP3 (110)</code><br>
+                <code class="command">telnet mail.company.com 110</code>
+            </div>
+
+            <h3>Scenario 4: Remote Desktop Connection</h3>
+            <div class="code-block">
+                <code># Quick test with Telnet</code><br>
+                <code class="command">telnet 192.168.1.100 3389</code><br><br>
+                <code># Detailed RDP port analysis</code><br>
+                <code class="command">portqry -n 192.168.1.100 -p tcp -e 3389</code><br><br>
+                <code># PowerShell alternative (2026)</code><br>
+                <code class="command">Test-NetConnection -ComputerName 192.168.1.100 -Port 3389</code>
+            </div>
+
+            <h3>Scenario 5: DNS Server Check</h3>
+            <div class="code-block">
+                <code># Check DNS TCP (53)</code><br>
+                <code class="command">telnet dns.google 53</code><br><br>
+                <code># Check DNS UDP and TCP</code><br>
+                <code class="command">portqry -n 8.8.8.8 -p both -e 53</code><br><br>
+                <code># Test local DNS</code><br>
+                <code class="command">portqry -n 127.0.0.1 -p udp -e 53</code>
+            </div>
+
+            <h3>Scenario 6: Firewall Rule Verification</h3>
+            <div class="code-block">
+                <code># Test multiple ports at once</code><br>
+                <code class="command">portqry -n firewall.local -p tcp -o 21,22,80,443,3389</code><br><br>
+                <code># Scan common web ports</code><br>
+                <code class="command">portqry -n webserver.com -p tcp -r 80:443</code><br><br>
+                <code># Log results for compliance</code><br>
+                <code class="command">portqry -n 10.0.0.1 -p tcp -r 1:65535 -l full-scan.log</code>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Important:</strong> Always get permission before scanning ports on networks you don't own. Unauthorized port scanning may be illegal in your jurisdiction.
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div id="troubleshooting" class="content-section">
+            <h2>🔍 Troubleshooting Guide</h2>
+
+            <h3>Common Issues & Solutions</h3>
+
+            <p><strong>Issue: "Telnet is not recognized"</strong></p>
+            <div class="code-block">
+                <code># Solution: Enable Telnet Client</code><br>
+                <code class="command">dism /online /Enable-Feature /FeatureName:TelnetClient</code><br><br>
+                <code># Or install via Windows Features</code><br>
+                <code>Settings > Apps > Optional Features > Add Telnet Client</code>
+            </div>
+
+            <p><strong>Issue: PortQry shows "FILTERED"</strong></p>
+            <div class="note">
+                <strong>Possible Causes:</strong><br>
+                • Firewall blocking traffic<br>
+                • Network ACL restrictions<br>
+                • Router blocking packets<br>
+                • Host-based firewall active<br><br>
+                <strong>Solutions:</strong><br>
+                1. Check Windows Firewall rules<br>
+                2. Verify network firewall policies<br>
+                3. Confirm service is running<br>
+                4. Check antivirus/security software
+            </div>
+
+            <p><strong>Issue: Telnet connects but shows blank screen</strong></p>
+            <div class="tip">
+                <strong>✅ This is NORMAL!</strong> A blank screen means the port is OPEN. The service is waiting for your input. Try typing a command specific to that service or press Ctrl+] to exit.
+            </div>
+
+            <p><strong>Issue: "Connection timed out"</strong></p>
+            <div class="code-block">
+                <code># Possible reasons:</code><br>
+                <code>1. Host is offline or unreachable</code><br>
+                <code>2. Firewall dropping packets (no response)</code><br>
+                <code>3. Network routing issue</code><br>
+                <code>4. Service not running on target port</code><br><br>
+                <code># Troubleshoot with ping first:</code><br>
+                <code class="command">ping hostname.com</code><br><br>
+                <code># Then check with PortQry:</code><br>
+                <code class="command">portqry -n hostname.com -p tcp -e [port]</code>
+            </div>
+
+            <p><strong>Issue: UDP ports show as "LISTENING or FILTERED"</strong></p>
+            <div class="note">
+                <strong>💡 Explanation:</strong> UDP is connectionless, so PortQry can't definitively determine if a UDP port is listening without protocol-specific queries. Use the <code>-nr</code> flag for more aggressive testing.
+            </div>
+
+            <p><strong>Issue: Getting different results from different tools</strong></p>
+            <table>
+                <tr>
+                    <th>Tool</th>
+                    <th>What It Tests</th>
+                    <th>Best For</th>
+                </tr>
+                <tr>
+                    <td>Telnet</td>
+                    <td>TCP connection attempt</td>
+                    <td>Quick TCP port checks</td>
+                </tr>
+                <tr>
+                    <td>PortQry</td>
+                    <td>Protocol-aware testing</td>
+                    <td>Detailed diagnostics</td>
+                </tr>
+                <tr>
+                    <td>Nmap</td>
+                    <td>Advanced port scanning</td>
+                    <td>Security audits</td>
+                </tr>
+                <tr>
+                    <td>Test-NetConnection</td>
+                    <td>PowerShell native test</td>
+                    <td>Windows automation</td>
+                </tr>
+            </table>
+
+            <h3>Best Practices for 2026</h3>
+            <ul>
+                <li>✅ Always test from multiple source locations</li>
+                <li>✅ Document firewall rules before testing</li>
+                <li>✅ Use both Telnet and PortQry for comprehensive testing</li>
+                <li>✅ Log results for compliance and auditing</li>
+                <li>✅ Test during maintenance windows when possible</li>
+                <li>✅ Combine with network monitoring tools</li>
+                <li>⚠️ Never use Telnet for authentication in production</li>
+                <li>⚠️ Get authorization before port scanning</li>
+            </ul>
+
+            <h3>Quick Reference Commands</h3>
+            <div class="code-block">
+                <code># Basic Telnet Test</code><br>
+                <code class="command">telnet [host] [port]</code><br><br>
+                <code># Basic PortQry Test</code><br>
+                <code class="command">portqry -n [host] -p tcp -e [port]</code><br><br>
+                <code># PowerShell Modern Test</code><br>
+                <code class="command">Test-NetConnection [host] -Port [port]</code><br><br>
+                <code># Check Local Listening Ports</code><br>
+                <code class="command">netstat -ano | findstr LISTENING</code><br><br>
+                <code># Advanced PortQry with Logging</code><br>
+                <code class="command">portqry -n [host] -p tcp -o 80,443 -l results.log -y</code>
+            </div>
+
+            <h3>When to Use What</h3>
+            <div class="tip">
+                <strong>Use Telnet when:</strong><br>
+                • You need a quick yes/no answer<br>
+                • Testing TCP ports only<br>
+                • Interacting with text-based services<br>
+                • Tool is already available<br><br>
+                <strong>Use PortQry when:</strong><br>
+                • You need detailed diagnostic info<br>
+                • Testing UDP ports<br>
+                • Protocol-specific testing (DNS, LDAP, etc.)<br>
+                • Creating detailed reports<br>
+                • Automating port testing
+            </div>
+        </div>
+
+        <!-- Web Application Troubleshooting -->
+        <div id="webapp-troubleshoot" class="content-section">
+            <h2>🌐 Complete Web Application Troubleshooting</h2>
+
+            <h3>📋 Scenario: "Our E-Commerce Site Won't Load"</h3>
+            <p><strong>Problem:</strong> Users report "site not loading" for shop.company.com. Sales team is panicking.</p>
+
+            <h3>Step-by-Step Diagnosis Procedure</h3>
+
+            <p><strong>STEP 1: Verify DNS Resolution</strong></p>
+            <div class="code-block">
+                <code># Test if domain resolves</code><br>
+                <code class="command">nslookup shop.company.com</code><br><br>
+                <code>✅ Expected Output:</code><br>
+                <code>Server:  dns.company.com</code><br>
+                <code>Address: 10.0.0.53</code><br>
+                <code>Name:    shop.company.com</code><br>
+                <code>Address: 203.0.113.50</code><br><br>
+                <code>❌ Problem Output:</code><br>
+                <code>*** dns.company.com can't find shop.company.com: Non-existent domain</code>
+            </div>
+
+            <div class="note">
+                <strong>🔍 If DNS fails:</strong> Check DNS server (port 53), verify DNS records, check domain registration status.
+            </div>
+
+            <p><strong>STEP 2: Test Load Balancer Connectivity</strong></p>
+            <div class="code-block">
+                <code># Test external load balancer (HTTPS)</code><br>
+                <code class="command">telnet shop.company.com 443</code><br><br>
+                <code>✅ Expected: Connection opens (blank screen)</code><br>
+                <code>❌ Problem: "Connection failed" or timeout</code><br><br>
+                <code># Get detailed info</code><br>
+                <code class="command">portqry -n shop.company.com -p tcp -e 443</code><br><br>
+                <code>✅ Expected Output:</code><br>
+                <code>TCP port 443 (https service): LISTENING</code><br><br>
+                <code>❌ Problem Outputs:</code><br>
+                <code>TCP port 443 (https service): FILTERED</code><br>
+                <code>or</code><br>
+                <code>TCP port 443 (https service): NOT LISTENING</code>
+            </div>
+
+            <p><strong>STEP 3: Test Backend Web Servers</strong></p>
+            <div class="code-block">
+                <code># If load balancer is up, test actual web servers behind it</code><br>
+                <code># (assume LB forwards to web01 and web02)</code><br><br>
+                <code class="command">telnet web01.internal.local 80</code><br>
+                <code class="command">telnet web02.internal.local 80</code><br><br>
+                <code># Test with PortQry for details</code><br>
+                <code class="command">portqry -n web01.internal.local -p tcp -e 80</code><br>
+                <code class="command">portqry -n web02.internal.local -p tcp -e 80</code><br><br>
+                <code>✅ Both should show: LISTENING</code><br>
+                <code>❌ If one shows: NOT LISTENING → That server is down</code>
+            </div>
+
+            <p><strong>STEP 4: Test Application Database Connection</strong></p>
+            <div class="code-block">
+                <code># Test from web server to database server</code><br>
+                <code class="command">portqry -n db01.internal.local -p tcp -e 3306</code><br><br>
+                <code>✅ Expected:</code><br>
+                <code>TCP port 3306 (mysql service): LISTENING</code><br><br>
+                <code>❌ Common Problems:</code><br>
+                <code>FILTERED → Firewall blocking web → database traffic</code><br>
+                <code>NOT LISTENING → Database service is down</code>
+            </div>
+
+            <p><strong>STEP 5: Test Complete Chain with HTTP Request</strong></p>
+            <div class="code-block">
+                <code># Use telnet to send actual HTTP request</code><br>
+                <code class="command">telnet shop.company.com 80</code><br><br>
+                <code># Once connected, type (quickly!):</code><br>
+                <code>GET / HTTP/1.1</code><br>
+                <code>Host: shop.company.com</code><br>
+                <code>[Press Enter twice]</code><br><br>
+                <code>✅ Expected Response:</code><br>
+                <code>HTTP/1.1 200 OK</code><br>
+                <code>Server: nginx/1.24.0</code><br>
+                <code>Content-Type: text/html</code><br>
+                <code>...</code><br><br>
+                <code>❌ Problem Responses:</code><br>
+                <code>HTTP/1.1 502 Bad Gateway → Backend servers down</code><br>
+                <code>HTTP/1.1 503 Service Unavailable → Server overloaded</code><br>
+                <code>HTTP/1.1 504 Gateway Timeout → Backend too slow</code>
+            </div>
+
+            <h3>🎯 Root Cause Identification</h3>
+            <table>
+                <tr>
+                    <th>Symptom</th>
+                    <th>Layer Failed</th>
+                    <th>Action Required</th>
+                </tr>
+                <tr>
+                    <td>DNS fails</td>
+                    <td>DNS Layer</td>
+                    <td>Fix DNS records, check DNS server</td>
+                </tr>
+                <tr>
+                    <td>Load balancer FILTERED</td>
+                    <td>Network/Firewall</td>
+                    <td>Check external firewall rules</td>
+                </tr>
+                <tr>
+                    <td>Load balancer NOT LISTENING</td>
+                    <td>Load Balancer</td>
+                    <td>Restart load balancer service</td>
+                </tr>
+                <tr>
+                    <td>Web server NOT LISTENING</td>
+                    <td>Web Server</td>
+                    <td>Restart web service (nginx/apache)</td>
+                </tr>
+                <tr>
+                    <td>Database FILTERED</td>
+                    <td>Internal Firewall</td>
+                    <td>Fix internal firewall rules</td>
+                </tr>
+                <tr>
+                    <td>502 Bad Gateway</td>
+                    <td>Backend Connection</td>
+                    <td>Check backend server health</td>
+                </tr>
+            </table>
+
+            <h3>✅ Complete Verification Script</h3>
+            <div class="code-block">
+                <code># Save as: webapp-health-check.bat</code><br>
+                <code class="command">@echo off</code><br>
+                <code class="command">echo === Web Application Health Check ===</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [1/5] Testing DNS...</code><br>
+                <code class="command">nslookup shop.company.com</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [2/5] Testing Load Balancer HTTPS...</code><br>
+                <code class="command">portqry -n shop.company.com -p tcp -e 443</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [3/5] Testing Backend Web Servers...</code><br>
+                <code class="command">portqry -n web01.internal.local -p tcp -e 80</code><br>
+                <code class="command">portqry -n web02.internal.local -p tcp -e 80</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [4/5] Testing Database Connection...</code><br>
+                <code class="command">portqry -n db01.internal.local -p tcp -e 3306</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [5/5] Testing Redis Cache...</code><br>
+                <code class="command">portqry -n redis01.internal.local -p tcp -e 6379</code><br>
+                <code class="command">echo.</code><br>
+                <code class="command">echo === Health Check Complete ===</code>
+            </div>
+
+            <div class="tip">
+                <strong>💡 Pro Tip:</strong> Schedule this script to run every 5 minutes and log results. This creates a timeline of when issues started.
+            </div>
+
+            <h3>🔧 Common Web App Port Reference</h3>
+            <table>
+                <tr>
+                    <th>Service</th>
+                    <th>Port</th>
+                    <th>Test Command</th>
+                </tr>
+                <tr>
+                    <td>HTTP</td>
+                    <td>80</td>
+                    <td>telnet site.com 80</td>
+                </tr>
+                <tr>
+                    <td>HTTPS</td>
+                    <td>443</td>
+                    <td>telnet site.com 443</td>
+                </tr>
+                <tr>
+                    <td>MySQL/MariaDB</td>
+                    <td>3306</td>
+                    <td>portqry -n db.local -p tcp -e 3306</td>
+                </tr>
+                <tr>
+                    <td>PostgreSQL</td>
+                    <td>5432</td>
+                    <td>portqry -n db.local -p tcp -e 5432</td>
+                </tr>
+                <tr>
+                    <td>Redis Cache</td>
+                    <td>6379</td>
+                    <td>telnet redis.local 6379</td>
+                </tr>
+                <tr>
+                    <td>Memcached</td>
+                    <td>11211</td>
+                    <td>telnet memcache.local 11211</td>
+                </tr>
+                <tr>
+                    <td>Elasticsearch</td>
+                    <td>9200</td>
+                    <td>telnet elastic.local 9200</td>
+                </tr>
+                <tr>
+                    <td>MongoDB</td>
+                    <td>27017</td>
+                    <td>portqry -n mongo.local -p tcp -e 27017</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Active Directory Troubleshooting -->
+        <div id="active-directory" class="content-section">
+            <h2>🏢 Active Directory & Domain Controller Troubleshooting</h2>
+
+            <h3>📋 Scenario: "Users Can't Log Into Domain"</h3>
+            <p><strong>Problem:</strong> Monday morning, users getting "domain controller cannot be contacted" errors.</p>
+
+            <h3>Critical AD Ports to Test</h3>
+            <table>
+                <tr>
+                    <th>Port</th>
+                    <th>Protocol</th>
+                    <th>Service</th>
+                    <th>Critical?</th>
+                </tr>
+                <tr>
+                    <td>53</td>
+                    <td>TCP/UDP</td>
+                    <td>DNS</td>
+                    <td>⚠️ CRITICAL</td>
+                </tr>
+                <tr>
+                    <td>88</td>
+                    <td>TCP/UDP</td>
+                    <td>Kerberos</td>
+                    <td>⚠️ CRITICAL</td>
+                </tr>
+                <tr>
+                    <td>135</td>
+                    <td>TCP</td>
+                    <td>RPC Endpoint Mapper</td>
+                    <td>⚠️ CRITICAL</td>
+                </tr>
+                <tr>
+                    <td>389</td>
+                    <td>TCP/UDP</td>
+                    <td>LDAP</td>
+                    <td>⚠️ CRITICAL</td>
+                </tr>
+                <tr>
+                    <td>445</td>
+                    <td>TCP</td>
+                    <td>SMB/CIFS</td>
+                    <td>⚠️ CRITICAL</td>
+                </tr>
+                <tr>
+                    <td>636</td>
+                    <td>TCP</td>
+                    <td>LDAPS (Secure LDAP)</td>
+                    <td>🔒 Recommended</td>
+                </tr>
+                <tr>
+                    <td>3268</td>
+                    <td>TCP</td>
+                    <td>Global Catalog</td>
+                    <td>⚠️ CRITICAL</td>
+                </tr>
+                <tr>
+                    <td>3269</td>
+                    <td>TCP</td>
+                    <td>Global Catalog SSL</td>
+                    <td>🔒 Recommended</td>
+                </tr>
+            </table>
+
+            <h3>Step-by-Step AD Connectivity Diagnosis</h3>
+
+            <p><strong>STEP 1: Test DNS First (ALWAYS!)</strong></p>
+            <div class="code-block">
+                <code># DNS is the foundation of AD - test both UDP and TCP</code><br>
+                <code class="command">portqry -n dc01.company.local -p both -e 53</code><br><br>
+                <code>✅ Expected Output:</code><br>
+                <code>UDP port 53 (domain service): LISTENING or FILTERED</code><br>
+                <code>TCP port 53 (domain service): LISTENING</code><br><br>
+                <code># Verify DNS resolution</code><br>
+                <code class="command">nslookup company.local dc01.company.local</code><br><br>
+                <code>✅ Expected: Returns DC IP addresses</code><br>
+                <code>❌ Problem: "can't find" or timeout</code>
+            </div>
+
+            <p><strong>STEP 2: Test Kerberos Authentication</strong></p>
+            <div class="code-block">
+                <code># Kerberos is critical for authentication</code><br>
+                <code class="command">portqry -n dc01.company.local -p both -e 88</code><br><br>
+                <code>✅ Expected:</code><br>
+                <code>TCP port 88 (kerberos service): LISTENING</code><br>
+                <code>UDP port 88 (kerberos service): LISTENING or FILTERED</code><br><br>
+                <code>❌ If FILTERED on TCP:</code><br>
+                <code>Firewall blocking Kerberos → Authentication will fail</code>
+            </div>
+
+            <p><strong>STEP 3: Test LDAP Directory Access</strong></p>
+            <div class="code-block">
+                <code># Test standard LDAP</code><br>
+                <code class="command">portqry -n dc01.company.local -p tcp -e 389</code><br><br>
+                <code>✅ Expected:</code><br>
+                <code>TCP port 389 (ldap service): LISTENING</code><br><br>
+                <code># Test LDAPS (secure)</code><br>
+                <code class="command">portqry -n dc01.company.local -p tcp -e 636</code><br><br>
+                <code># Test with telnet to see LDAP banner</code><br>
+                <code class="command">telnet dc01.company.local 389</code><br>
+                <code>✅ Connection opens = LDAP responding</code>
+            </div>
+
+            <p><strong>STEP 4: Test Global Catalog Services</strong></p>
+            <div class="code-block">
+                <code># Global Catalog needed for multi-domain forests</code><br>
+                <code class="command">portqry -n dc01.company.local -p tcp -e 3268</code><br>
+                <code class="command">portqry -n dc01.company.local -p tcp -e 3269</code><br><br>
+                <code>✅ Expected: Both LISTENING</code><br>
+                <code>❌ If NOT LISTENING: DC may not be a Global Catalog server</code><br><br>
+                <code># Verify GC is enabled</code><br>
+                <code class="command">telnet dc01.company.local 3268</code>
+            </div>
+
+            <p><strong>STEP 5: Test RPC and File Sharing</strong></p>
+            <div class="code-block">
+                <code># Test RPC Endpoint Mapper</code><br>
+                <code class="command">portqry -n dc01.company.local -p tcp -e 135</code><br><br>
+                <code># Test SMB/CIFS (needed for sysvol, netlogon)</code><br>
+                <code class="command">portqry -n dc01.company.local -p tcp -e 445</code><br><br>
+                <code>✅ Expected: Both LISTENING</code><br>
+                <code>❌ If 445 is FILTERED: Group Policy won't apply</code>
+            </div>
+
+            <h3>🔍 Complete AD Health Check Script</h3>
+            <div class="code-block">
+                <code class="command">@echo off</code><br>
+                <code class="command">echo === Active Directory Connectivity Test ===</code><br>
+                <code class="command">set DC=dc01.company.local</code><br>
+                <code class="command">echo Testing Domain Controller: %DC%</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [1/7] DNS (Port 53 TCP/UDP)...</code><br>
+                <code class="command">portqry -n %DC% -p both -e 53</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [2/7] Kerberos (Port 88 TCP/UDP)...</code><br>
+                <code class="command">portqry -n %DC% -p both -e 88</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [3/7] RPC Endpoint Mapper (Port 135)...</code><br>
+                <code class="command">portqry -n %DC% -p tcp -e 135</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [4/7] LDAP (Port 389)...</code><br>
+                <code class="command">portqry -n %DC% -p tcp -e 389</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [5/7] SMB (Port 445)...</code><br>
+                <code class="command">portqry -n %DC% -p tcp -e 445</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [6/7] LDAPS (Port 636)...</code><br>
+                <code class="command">portqry -n %DC% -p tcp -e 636</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [7/7] Global Catalog (Port 3268)...</code><br>
+                <code class="command">portqry -n %DC% -p tcp -e 3268</code><br>
+                <code class="command">echo.</code><br>
+                <code class="command">echo === Test Complete ===</code><br>
+                <code class="command">pause</code>
+            </div>
+
+            <h3>🎯 Troubleshooting Decision Tree</h3>
+            <div class="note">
+                <strong>If DNS (53) fails:</strong><br>
+                → Users can't find domain controller<br>
+                → Check DNS service on DC<br>
+                → Verify client DNS settings point to DC<br>
+                → Check firewall rules for port 53<br><br>
+                
+                <strong>If Kerberos (88) fails:</strong><br>
+                → Authentication will fail<br>
+                → Time synchronization issues common<br>
+                → Check Windows Time service<br>
+                → Verify firewall allows port 88<br><br>
+                
+                <strong>If LDAP (389) fails:</strong><br>
+                → Can't query directory<br>
+                → Check Active Directory Domain Services running<br>
+                → Check AD database health<br>
+                → Review event logs (NTDS)<br><br>
+                
+                <strong>If SMB (445) fails:</strong><br>
+                → Group Policy can't apply<br>
+                → Can't access SYSVOL/NETLOGON<br>
+                → Check Server service running<br>
+                → Verify firewall rules<br><br>
+                
+                <strong>If Global Catalog (3268) fails:</strong><br>
+                → Multi-domain logins fail<br>
+                → Universal group membership issues<br>
+                → Verify DC is GC server<br>
+                → Check AD replication
+            </div>
+
+            <h3>✅ Verification After Fix</h3>
+            <div class="code-block">
+                <code># Test user login from client</code><br>
+                <code class="command">nltest /dsgetdc:company.local</code><br><br>
+                <code>✅ Expected: Returns DC information</code><br><br>
+                <code># Verify authentication path</code><br>
+                <code class="command">klist</code><br><br>
+                <code>✅ Expected: Shows Kerberos tickets</code><br><br>
+                <code># Test Group Policy application</code><br>
+                <code class="command">gpresult /r</code><br><br>
+                <code>✅ Expected: Shows applied policies</code>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Critical:</strong> Never disable Windows Firewall on domain controllers. Instead, create proper firewall rules for AD ports. Use Group Policy to configure firewall rules across the domain.
+            </div>
+        </div>
+
+        <!-- Email Systems Complete -->
+        <div id="email-complete" class="content-section">
+            <h2>📧 Complete Email System Troubleshooting</h2>
+
+            <h3>📋 Scenario: "Email Not Sending/Receiving"</h3>
+            <p><strong>Problem:</strong> Users can't send emails, or external emails aren't arriving.</p>
+
+            <h3>Email System Port Reference</h3>
+            <table>
+                <tr>
+                    <th>Port</th>
+                    <th>Protocol</th>
+                    <th>Purpose</th>
+                    <th>Encryption</th>
+                </tr>
+                <tr>
+                    <td>25</td>
+                    <td>SMTP</td>
+                    <td>Server-to-server mail transfer</td>
+                    <td>STARTTLS optional</td>
+                </tr>
+                <tr>
+                    <td>587</td>
+                    <td>SMTP</td>
+                    <td>Client submission (2026 standard)</td>
+                    <td>STARTTLS required</td>
+                </tr>
+                <tr>
+                    <td>465</td>
+                    <td>SMTPS</td>
+                    <td>SMTP over SSL (legacy)</td>
+                    <td>SSL/TLS</td>
+                </tr>
+                <tr>
+                    <td>110</td>
+                    <td>POP3</td>
+                    <td>Retrieve email (download)</td>
+                    <td>None</td>
+                </tr>
+                <tr>
+                    <td>995</td>
+                    <td>POP3S</td>
+                    <td>Secure POP3</td>
+                    <td>SSL/TLS</td>
+                </tr>
+                <tr>
+                    <td>143</td>
+                    <td>IMAP</td>
+                    <td>Retrieve email (sync)</td>
+                    <td>None</td>
+                </tr>
+                <tr>
+                    <td>993</td>
+                    <td>IMAPS</td>
+                    <td>Secure IMAP</td>
+                    <td>SSL/TLS</td>
+                </tr>
+            </table>
+
+            <h3>Step-by-Step Email Diagnosis</h3>
+
+            <p><strong>STEP 1: Test Outbound SMTP (Port 25)</strong></p>
+            <div class="code-block">
+                <code># Test if you can send to external servers</code><br>
+                <code class="command">telnet smtp.gmail.com 25</code><br><br>
+                <code>✅ Expected Response:</code><br>
+                <code>220 smtp.gmail.com ESMTP</code><br><br>
+                <code># Try full SMTP conversation</code><br>
+                <code>Once connected, type:</code><br>
+                <code>HELO myserver.com</code><br>
+                <code>250 smtp.gmail.com at your service</code><br>
+                <code>MAIL FROM:&lt;test@myserver.com&gt;</code><br>
+                <code>250 2.1.0 OK</code><br>
+                <code>RCPT TO:&lt;test@gmail.com&gt;</code><br>
+                <code>250 2.1.5 OK</code><br>
+                <code>QUIT</code><br>
+                <code>221 2.0.0 closing connection</code><br><br>
+                <code>❌ Common Failures:</code><br>
+                <code>Connection timeout → ISP blocks port 25</code><br>
+                <code>550 Relay denied → Not authorized to relay</code>
+            </div>
+
+            <p><strong>STEP 2: Test Mail Submission Port (587)</strong></p>
+            <div class="code-block">
+                <code># Modern standard for client submissions (2026)</code><br>
+                <code class="command">telnet mail.company.com 587</code><br><br>
+                <code>✅ Expected:</code><br>
+                <code>220 mail.company.com ESMTP Postfix</code><br><br>
+                <code># Test with PortQry</code><br>
+                <code class="command">portqry -n mail.company.com -p tcp -e 587</code><br><br>
+                <code>✅ Expected: LISTENING</code><br>
+                <code>❌ FILTERED → Firewall blocking submission port</code>
+            </div>
+
+            <p><strong>STEP 3: Test Incoming Mail (IMAP/POP3)</strong></p>
+            <div class="code-block">
+                <code># Test IMAP (recommended in 2026)</code><br>
+                <code class="command">telnet mail.company.com 143</code><br><br>
+                <code>✅ Expected Response:</code><br>
+                <code>* OK [CAPABILITY IMAP4rev1] IMAP4 ready</code><br><br>
+                <code># Test secure IMAP</code><br>
+                <code class="command">telnet mail.company.com 993</code><br>
+                <code>✅ Connection opens (TLS handshake)</code><br><br>
+                <code># Test POP3 (if still used)</code><br>
+                <code class="command">telnet mail.company.com 110</code><br><br>
+                <code>✅ Expected:</code><br>
+                <code>+OK POP3 server ready</code>
+            </div>
+
+            <p><strong>STEP 4: Complete SMTP Authentication Test</strong></p>
+            <div class="code-block">
+                <code># Full authentication test on port 587</code><br>
+                <code class="command">telnet mail.company.com 587</code><br><br>
+                <code>220 mail.company.com ESMTP</code><br>
+                <code>EHLO client.company.com</code><br>
+                <code>250-mail.company.com</code><br>
+                <code>250-STARTTLS</code><br>
+                <code>250-AUTH LOGIN PLAIN</code><br>
+                <code>250 HELP</code><br><br>
+                <code>STARTTLS</code><br>
+                <code>220 2.0.0 Ready to start TLS</code><br><br>
+                <code>✅ STARTTLS available = Secure submission working</code><br>
+                <code>❌ No STARTTLS = Security issue</code>
+            </div>
+
+            <h3>🔍 Exchange Server Specific Tests</h3>
+            <div class="code-block">
+                <code># Exchange common ports</code><br>
+                <code class="command">portqry -n exchange.company.local -p tcp -o 25,80,443,587,993</code><br><br>
+                <code># Outlook Anywhere (RPC over HTTPS)</code><br>
+                <code class="command">telnet exchange.company.local 443</code><br><br>
+                <code># Exchange Web Services (EWS)</code><br>
+                <code class="command">portqry -n exchange.company.local -p tcp -e 443</code><br><br>
+                <code># ActiveSync (mobile devices)</code><br>
+                <code class="command">telnet exchange.company.local 443</code>
+            </div>
+
+            <h3>🌐 Office 365 / Microsoft 365 Testing</h3>
+            <div class="code-block">
+                <code># Test Outlook connectivity to Office 365</code><br>
+                <code class="command">telnet outlook.office365.com 587</code><br><br>
+                <code>✅ Expected: Connection opens</code><br><br>
+                <code># Test IMAP to Office 365</code><br>
+                <code class="command">telnet outlook.office365.com 993</code><br><br>
+                <code># Test SMTP relay through Office 365</code><br>
+                <code class="command">telnet smtp.office365.com 587</code><br><br>
+                <code># Test with PortQry</code><br>
+                <code class="command">portqry -n outlook.office365.com -p tcp -e 993</code>
+            </div>
+
+            <h3>📝 Complete Email Flow Test Script</h3>
+            <div class="code-block">
+                <code class="command">@echo off</code><br>
+                <code class="command">echo === Email System Health Check ===</code><br>
+                <code class="command">set MAILSERVER=mail.company.com</code><br>
+                <code class="command">echo Testing: %MAILSERVER%</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [1/6] SMTP Server-to-Server (25)...</code><br>
+                <code class="command">portqry -n %MAILSERVER% -p tcp -e 25</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [2/6] SMTP Submission (587)...</code><br>
+                <code class="command">portqry -n %MAILSERVER% -p tcp -e 587</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [3/6] SMTPS Legacy (465)...</code><br>
+                <code class="command">portqry -n %MAILSERVER% -p tcp -e 465</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [4/6] IMAP (143)...</code><br>
+                <code class="command">portqry -n %MAILSERVER% -p tcp -e 143</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [5/6] IMAPS (993)...</code><br>
+                <code class="command">portqry -n %MAILSERVER% -p tcp -e 993</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [6/6] POP3S (995)...</code><br>
+                <code class="command">portqry -n %MAILSERVER% -p tcp -e 995</code><br>
+                <code class="command">echo.</code><br>
+                <code class="command">echo === Test Complete ===</code><br>
+                <code class="command">pause</code>
+            </div>
+
+            <h3>🎯 Common Email Issues & Solutions</h3>
+            <table>
+                <tr>
+                    <th>Problem</th>
+                    <th>Port Test Result</th>
+                    <th>Root Cause</th>
+                    <th>Solution</th>
+                </tr>
+                <tr>
+                    <td>Can't send email</td>
+                    <td>Port 587 FILTERED</td>
+                    <td>Firewall blocking</td>
+                    <td>Open firewall port 587</td>
+                </tr>
+                <tr>
+                    <td>External mail not arriving</td>
+                    <td>Port 25 NOT LISTENING</td>
+                    <td>SMTP service down</td>
+                    <td>Restart mail service</td>
+                </tr>
+                <tr>
+                    <td>Can't receive in Outlook</td>
+                    <td>Port 993 FILTERED</td>
+                    <td>ISP blocking IMAPS</td>
+                    <td>Use VPN or port 143</td>
+                </tr>
+                <tr>
+                    <td>Relay access denied</td>
+                    <td>Port 25 LISTENING</td>
+                    <td>Not authenticated</td>
+                    <td>Use port 587 with auth</td>
+                </tr>
+                <tr>
+                    <td>Mobile sync failing</td>
+                    <td>Port 443 NOT LISTENING</td>
+                    <td>ActiveSync service down</td>
+                    <td>Check IIS/Exchange</td>
+                </tr>
+            </table>
+
+            <div class="tip">
+                <strong>💡 2026 Best Practice:</strong> Always use port 587 for email submission with STARTTLS. Port 25 should only be used for server-to-server communication. Most ISPs block port 25 for residential connections to prevent spam.
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Security Alert:</strong> Never use unencrypted IMAP (143) or POP3 (110) over the internet. Always use IMAPS (993) or POP3S (995) to protect credentials and email content.
+            </div>
+        </div>
+
+        <!-- Database Troubleshooting -->
+        <div id="databases" class="content-section">
+            <h2>🗄️ Database Connectivity Troubleshooting</h2>
+
+            <h3>📋 Scenario: "Application Can't Connect to Database"</h3>
+            <p><strong>Problem:</strong> Web application showing database connection errors.</p>
+
+            <h3>Database Port Quick Reference</h3>
+            <table>
+                <tr>
+                    <th>Database</th>
+                    <th>Default Port</th>
+                    <th>Protocol</th>
+                    <th>Test Command</th>
+                </tr>
+                <tr>
+                    <td>MySQL/MariaDB</td>
+                    <td>3306</td>
+                    <td>TCP</td>
+                    <td>telnet db.local 3306</td>
+                </tr>
+                <tr>
+                    <td>PostgreSQL</td>
+                    <td>5432</td>
+                    <td>TCP</td>
+                    <td>telnet db.local 5432</td>
+                </tr>
+                <tr>
+                    <td>SQL Server</td>
+                    <td>1433</td>
+                    <td>TCP</td>
+                    <td>portqry -n db.local -e 1433</td>
+                </tr>
+                <tr>
+                    <td>Oracle</td>
+                    <td>1521</td>
+                    <td>TCP</td>
+                    <td>telnet db.local 1521</td>
+                </tr>
+                <tr>
+                    <td>MongoDB</td>
+                    <td>27017</td>
+                    <td>TCP</td>
+                    <td>telnet db.local 27017</td>
+                </tr>
+                <tr>
+                    <td>Redis</td>
+                    <td>6379</td>
+                    <td>TCP</td>
+                    <td>telnet db.local 6379</td>
+                </tr>
+                <tr>
+                    <td>Cassandra</td>
+                    <td>9042</td>
+                    <td>TCP</td>
+                    <td>telnet db.local 9042</td>
+                </tr>
+                <tr>
+                    <td>Elasticsearch</td>
+                    <td>9200</td>
+                    <td>TCP</td>
+                    <td>telnet db.local 9200</td>
+                </tr>
+            </table>
+
+            <h3>Step-by-Step Database Diagnosis</h3>
+
+            <p><strong>STEP 1: Test SQL Server Connection</strong></p>
+            <div class="code-block">
+                <code># Test default instance</code><br>
+                <code class="command">portqry -n sqlserver.company.local -p tcp -e 1433</code><br><br>
+                <code>✅ Expected Output:</code><br>
+                <code>TCP port 1433 (ms-sql-s service): LISTENING</code><br><br>
+                <code># Test SQL Browser service (for named instances)</code><br>
+                <code class="command">portqry -n sqlserver.company.local -p udp -e 1434</code><br><br>
+                <code>✅ Expected:</code><br>
+                <code>UDP port 1434 (ms-sql-m service): LISTENING or FILTERED</code><br><br>
+                <code># If using named instance (e.g., SQLEXPRESS)</code><br>
+                <code class="command">portqry -n sqlserver.company.local\SQLEXPRESS -p tcp -e 1433</code>
+            </div>
+
+            <p><strong>STEP 2: Test MySQL/MariaDB Connection</strong></p>
+            <div class="code-block">
+                <code># Quick test with telnet</code><br>
+                <code class="command">telnet mysql.company.local 3306</code><br><br>
+                <code>✅ Expected: See MySQL version banner</code><br>
+                <code>5.7.40-log MySQL Community Server</code><br>
+                <code>Connection closed by foreign host.</code><br><br>
+                <code># Detailed test with PortQry</code><br>
+                <code class="command">portqry -n mysql.company.local -p tcp -e 3306</code><br><br>
+                <code>✅ Expected:</code><br>
+                <code>TCP port 3306 (mysql service): LISTENING</code><br><br>
+                <code>❌ Common Issues:</code><br>
+                <code>FILTERED → Firewall blocking</code><br>
+                <code>NOT LISTENING → MySQL not running or bind-address wrong</code>
+            </div>
+
+            <p><strong>STEP 3: Test PostgreSQL Connection</strong></p>
+            <div class="code-block">
+                <code># Test PostgreSQL port</code><br>
+                <code class="command">telnet postgres.company.local 5432</code><br><br>
+                <code>✅ Connection opens (may show garbage characters)</code><br>
+                <code>This is normal - PostgreSQL uses binary protocol</code><br><br>
+                <code># Use PortQry for clean output</code><br>
+                <code class="command">portqry -n postgres.company.local -p tcp -e 5432</code><br><br>
+                <code>✅ Expected: LISTENING</code><br><br>
+                <code># Check if listening on all interfaces</code><br>
+                <code># (Check pg_hba.conf and postgresql.conf)</code>
+            </div>
+
+            <p><strong>STEP 4: Test MongoDB Connection</strong></p>
+            <div class="code-block">
+                <code># Test default MongoDB port</code><br>
+                <code class="command">telnet mongo.company.local 27017</code><br><br>
+                <code>✅ Expected: Connection opens</code><br>
+                <code>May show: "It looks like you are trying to access MongoDB over HTTP"</code><br>
+                <code>This is NORMAL - means MongoDB is running</code><br><br>
+                <code># Test with PortQry</code><br>
+                <code class="command">portqry -n mongo.company.local -p tcp -e 27017</code><br><br>
+                <code># Test MongoDB cluster ports (if sharded)</code><br>
+                <code class="command">portqry -n mongo.company.local -p tcp -o 27017,27018,27019</code>
+            </div>
+
+            <p><strong>STEP 5: Test Oracle Database</strong></p>
+            <div class="code-block">
+                <code># Test Oracle listener</code><br>
+                <code class="command">telnet oracle.company.local 1521</code><br><br>
+                <code>✅ Connection opens = Listener responding</code><br><br>
+                <code># Test with PortQry</code><br>
+                <code class="command">portqry -n oracle.company.local -p tcp -e 1521</code><br><br>
+                <code>✅ Expected: LISTENING</code><br><br>
+                <code># Test Oracle Enterprise Manager (if used)</code><br>
+                <code class="command">portqry -n oracle.company.local -p tcp -e 5500</code>
+            </div>
+
+            <h3>🔍 Complete Database Health Check</h3>
+            <div class="code-block">
+                <code class="command">@echo off</code><br>
+                <code class="command">echo === Database Infrastructure Health Check ===</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [SQL Server Tests]</code><br>
+                <code class="command">portqry -n sqlserver.local -p tcp -e 1433</code><br>
+                <code class="command">portqry -n sqlserver.local -p udp -e 1434</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [MySQL/MariaDB Tests]</code><br>
+                <code class="command">portqry -n mysql.local -p tcp -e 3306</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [PostgreSQL Tests]</code><br>
+                <code class="command">portqry -n postgres.local -p tcp -e 5432</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [MongoDB Tests]</code><br>
+                <code class="command">portqry -n mongo.local -p tcp -e 27017</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [Redis Cache Tests]</code><br>
+                <code class="command">portqry -n redis.local -p tcp -e 6379</code><br>
+                <code class="command">echo.</code><br>
+                <code class="command">echo === All Database Tests Complete ===</code><br>
+                <code class="command">pause</code>
+            </div>
+
+            <h3>🎯 Database Connectivity Issues & Solutions</h3>
+            <table>
+                <tr>
+                    <th>Symptom</th>
+                    <th>Test Result</th>
+                    <th>Likely Cause</th>
+                    <th>Solution</th>
+                </tr>
+                <tr>
+                    <td>Connection timeout</td>
+                    <td>Port FILTERED</td>
+                    <td>Firewall blocking</td>
+                    <td>Add firewall rule for DB port</td>
+                </tr>
+                <tr>
+                    <td>Connection refused</td>
+                    <td>Port NOT LISTENING</td>
+                    <td>Service not running</td>
+                    <td>Start database service</td>
+                </tr>
+                <tr>
+                    <td>SQL Server not found</td>
+                    <td>UDP 1434 blocked</td>
+                    <td>Browser service blocked</td>
+                    <td>Open UDP 1434 or use static port</td>
+                </tr>
+                <tr>
+                    <td>Access denied</td>
+                    <td>Port LISTENING</td>
+                    <td>Authentication issue</td>
+                    <td>Check user permissions</td>
+                </tr>
+                <tr>
+                    <td>MySQL bind error</td>
+                    <td>Localhost works, remote doesn't</td>
+                    <td>bind-address=127.0.0.1</td>
+                    <td>Change to 0.0.0.0 in my.cnf</td>
+                </tr>
+            </table>
+
+            <h3>💡 Testing from Application Server</h3>
+            <div class="code-block">
+                <code># Always test FROM the application server</code><br>
+                <code># Not from your admin workstation!</code><br><br>
+                <code># Remote into the web server first:</code><br>
+                <code class="command">mstsc /v:webserver01</code><br><br>
+                <code># Then test database from there:</code><br>
+                <code class="command">portqry -n db01.internal -p tcp -e 3306</code><br><br>
+                <code>Why? Network path matters!</code><br>
+                <code>• Your workstation might have different firewall rules</code><br>
+                <code>• VLANs might allow admin but block app traffic</code><br>
+                <code>• Load balancers might be in the path</code>
+            </div>
+
+            <div class="tip">
+                <strong>✅ Best Practice:</strong> Create a database connectivity test script and run it from each application server. This verifies the actual path your application uses, not just general network connectivity.
+            </div>
+
+            <h3>🔐 SQL Server Named Instances</h3>
+            <div class="code-block">
+                <code># Named instances use dynamic ports by default</code><br>
+                <code># Use SQL Browser (UDP 1434) to find them</code><br><br>
+                <code class="command">portqry -n server.local -p udp -e 1434</code><br><br>
+                <code>✅ Response shows instance names and ports:</code><br>
+                <code>ServerName: SERVER01</code><br>
+                <code>InstanceName: SQLEXPRESS</code><br>
+                <code>IsClustered: No</code><br>
+                <code>Version: 15.0.2000.5</code><br>
+                <code>tcp: 49175</code><br><br>
+                <code># Now test the specific port:</code><br>
+                <code class="command">portqry -n server.local -p tcp -e 49175</code><br><br>
+                <code>💡 Best Practice: Set static port for named instances</code>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Security Note:</strong> Exposing database ports directly to the internet is dangerous. Always use:
+                <br>• VPN for remote database access
+                <br>• Firewall rules to restrict source IPs
+                <br>• SSL/TLS encryption for connections
+                <br>• Strong authentication (not sa/root with weak passwords)
+            </div>
+        </div>
+
+        <!-- Cloud Services -->
+        <div id="cloud-services" class="content-section">
+            <h2>☁️ Cloud Services Connectivity Testing</h2>
+
+            <h3>📋 Scenario: "Can't Connect to Cloud Resources"</h3>
+            <p><strong>Problem:</strong> Applications timing out when accessing AWS, Azure, or GCP services.</p>
+
+            <h3>AWS Services Port Testing</h3>
+
+            <p><strong>Test RDS Database Connectivity</strong></p>
+            <div class="code-block">
+                <code># Test MySQL RDS</code><br>
+                <code class="command">telnet mydb.abc123.us-east-1.rds.amazonaws.com 3306</code><br><br>
+                <code># Test PostgreSQL RDS</code><br>
+                <code class="command">telnet mydb.abc123.us-east-1.rds.amazonaws.com 5432</code><br><br>
+                <code># Test SQL Server RDS</code><br>
+                <code class="command">portqry -n mydb.abc123.us-east-1.rds.amazonaws.com -p tcp -e 1433</code><br><br>
+                <code>✅ Expected: Connection succeeds</code><br>
+                <code>❌ Timeout → Check security group rules</code>
+            </div>
+
+            <p><strong>Test ElastiCache (Redis/Memcached)</strong></p>
+            <div class="code-block">
+                <code># Test Redis ElastiCache</code><br>
+                <code class="command">telnet mycache.abc123.0001.use1.cache.amazonaws.com 6379</code><br><br>
+                <code>✅ Connection opens = ElastiCache accessible</code><br><br>
+                <code># Test Memcached</code><br>
+                <code class="command">telnet mycache.abc123.cfg.use1.cache.amazonaws.com 11211</code><br><br>
+                <code>❌ If fails: Check VPC security groups and NACLs</code>
+            </div>
+
+            <p><strong>Test EC2 Instances</strong></p>
+            <div class="code-block">
+                <code># Test SSH to EC2</code><br>
+                <code class="command">telnet ec2-52-1-2-3.compute-1.amazonaws.com 22</code><br><br>
+                <code>✅ SSH banner appears</code><br>
+                <code>SSH-2.0-OpenSSH_8.9</code><br><br>
+                <code># Test RDP to Windows EC2</code><br>
+                <code class="command">telnet ec2-52-1-2-3.compute-1.amazonaws.com 3389</code><br><br>
+                <code># Test custom application port</code><br>
+                <code class="command">portqry -n ec2-52-1-2-3.compute-1.amazonaws.com -p tcp -e 8080</code>
+            </div>
+
+            <h3>Azure Services Port Testing</h3>
+
+            <p><strong>Test Azure SQL Database</strong></p>
+            <div class="code-block">
+                <code># Test Azure SQL</code><br>
+                <code class="command">telnet myserver.database.windows.net 1433</code><br><br>
+                <code>✅ Connection opens = Firewall allows your IP</code><br>
+                <code>❌ Timeout = Add your IP to Azure SQL firewall</code><br><br>
+                <code># With PortQry</code><br>
+                <code class="command">portqry -n myserver.database.windows.net -p tcp -e 1433</code>
+            </div>
+
+            <p><strong>Test Azure Storage</strong></p>
+            <div class="code-block">
+                <code># Test Blob storage HTTPS</code><br>
+                <code class="command">telnet mystorageaccount.blob.core.windows.net 443</code><br><br>
+                <code># Test File Share SMB</code><br>
+                <code class="command">telnet mystorageaccount.file.core.windows.net 445</code><br><br>
+                <code>✅ Port 445 opens = Can mount Azure File Share</code><br>
+                <code>❌ Port 445 blocked = ISP blocking SMB (common!)</code>
+            </div>
+
+            <p><strong>Test Azure VMs</strong></p>
+            <div class="code-block">
+                <code># Test RDP to Azure Windows VM</code><br>
+                <code class="command">telnet myvm-ip.eastus.cloudapp.azure.com 3389</code><br><br>
+                <code># Test SSH to Azure Linux VM</code><br>
+                <code class="command">telnet myvm-ip.eastus.cloudapp.azure.com 22</code><br><br>
+                <code>❌ If fails: Check NSG (Network Security Group) rules</code>
+            </div>
+
+            <h3>Google Cloud Platform Testing</h3>
+
+            <p><strong>Test Cloud SQL</strong></p>
+            <div class="code-block">
+                <code># Test Cloud SQL MySQL</code><br>
+                <code class="command">telnet 35.1.2.3 3306</code><br><br>
+                <code># Test Cloud SQL PostgreSQL</code><br>
+                <code class="command">telnet 35.1.2.3 5432</code><br><br>
+                <code>✅ Connection succeeds = IP whitelisted</code><br>
+                <code>❌ Timeout = Add IP to authorized networks</code>
+            </div>
+
+            <p><strong>Test GCE Instances</strong></p>
+            <div class="code-block">
+                <code># Test SSH to Compute Engine</code><br>
+                <code class="command">telnet 35.1.2.3 22</code><br><br>
+                <code># Test custom app port</code><br>
+                <code class="command">portqry -n 35.1.2.3 -p tcp -e 8080</code><br><br>
+                <code>❌ If blocked: Check VPC firewall rules</code>
+            </div>
+
+            <h3>🔍 Complete Cloud Connectivity Test Script</h3>
+            <div class="code-block">
+                <code class="command">@echo off</code><br>
+                <code class="command">echo === Cloud Services Connectivity Test ===</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [AWS RDS MySQL]</code><br>
+                <code class="command">portqry -n mydb.us-east-1.rds.amazonaws.com -p tcp -e 3306</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [AWS ElastiCache Redis]</code><br>
+                <code class="command">portqry -n mycache.use1.cache.amazonaws.com -p tcp -e 6379</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [Azure SQL Database]</code><br>
+                <code class="command">portqry -n myserver.database.windows.net -p tcp -e 1433</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [Azure Storage SMB]</code><br>
+                <code class="command">portqry -n mystorageaccount.file.core.windows.net -p tcp -e 445</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [GCP Cloud SQL PostgreSQL]</code><br>
+                <code class="command">portqry -n 35.1.2.3 -p tcp -e 5432</code><br>
+                <code class="command">echo.</code><br>
+                <code class="command">echo === Test Complete ===</code><br>
+                <code class="command">pause</code>
+            </div>
+
+            <h3>🎯 Cloud Troubleshooting Decision Tree</h3>
+            <table>
+                <tr>
+                    <th>Cloud Service</th>
+                    <th>Port Failed</th>
+                    <th>Check This First</th>
+                </tr>
+                <tr>
+                    <td>AWS RDS</td>
+                    <td>3306/5432/1433</td>
+                    <td>Security Group inbound rules</td>
+                </tr>
+                <tr>
+                    <td>AWS EC2</td>
+                    <td>Any</td>
+                    <td>Security Group + NACL rules</td>
+                </tr>
+                <tr>
+                    <td>AWS ElastiCache</td>
+                    <td>6379/11211</td>
+                    <td>Must be in same VPC or peered</td>
+                </tr>
+                <tr>
+                    <td>Azure SQL</td>
+                    <td>1433</td>
+                    <td>Azure SQL firewall IP whitelist</td>
+                </tr>
+                <tr>
+                    <td>Azure VM</td>
+                    <td>Any</td>
+                    <td>NSG (Network Security Group)</td>
+                </tr>
+                <tr>
+                    <td>Azure Storage</td>
+                    <td>445</td>
+                    <td>ISP blocking (very common!)</td>
+                </tr>
+                <tr>
+                    <td>GCP Cloud SQL</td>
+                    <td>3306/5432</td>
+                    <td>Authorized networks list</td>
+                </tr>
+                <tr>
+                    <td>GCP Compute</td>
+                    <td>Any</td>
+                    <td>VPC firewall rules</td>
+                </tr>
+            </table>
+
+            <div class="note">
+                <strong>💡 Common Cloud Issues:</strong><br>
+                <strong>AWS:</strong> Security groups are stateful, but NACLs are stateless. Check both!<br>
+                <strong>Azure:</strong> NSG rules evaluated by priority. Lower number = higher priority.<br>
+                <strong>GCP:</strong> Firewall rules are global. Priority 0-65535 (lower is higher).<br>
+                <strong>All Clouds:</strong> Default deny unless explicitly allowed.
+            </div>
+
+            <h3>🔐 Testing Cloud VPN Connections</h3>
+            <div class="code-block">
+                <code># Test AWS VPN endpoint</code><br>
+                <code class="command">portqry -n vpn-123abc.amazonaws.com -p udp -e 500</code><br>
+                <code class="command">portqry -n vpn-123abc.amazonaws.com -p udp -e 4500</code><br><br>
+                <code># Test Azure VPN gateway</code><br>
+                <code class="command">portqry -n myvpn.vpn.azure.com -p udp -e 500</code><br>
+                <code class="command">portqry -n myvpn.vpn.azure.com -p udp -e 4500</code><br><br>
+                <code>✅ Ports 500 & 4500 open = IPSec VPN can connect</code><br>
+                <code>❌ Filtered = Corporate firewall blocking VPN</code>
+            </div>
+
+            <div class="tip">
+                <strong>✅ Cloud Best Practice:</strong> Always test from the actual source (app server, on-prem server, etc.). Cloud providers often restrict access based on source IP or VPC. Your local test may pass but application still fails!
+            </div>
+        </div>
+
+        <!-- Security Audit -->
+        <div id="security-audit" class="content-section">
+            <h2>🔒 Security Audit & Compliance Testing</h2>
+
+            <h3>📋 Scenario: "Pre-Deployment Security Verification"</h3>
+            <p><strong>Goal:</strong> Verify only required ports are open before production deployment.</p>
+
+            <h3>Step-by-Step Security Port Audit</h3>
+
+            <p><strong>STEP 1: Identify Required Ports</strong></p>
+            <div class="note">
+                <strong>Document exactly what SHOULD be open:</strong><br>
+                • Web Server: 80, 443<br>
+                • SSH Management: 22 (from jump box only)<br>
+                • Database: 3306 (internal network only)<br>
+                • Monitoring: 9090 (internal only)<br><br>
+                Everything else should be FILTERED or NOT LISTENING!
+            </div>
+
+            <p><strong>STEP 2: Scan Common Attack Vectors</strong></p>
+            <div class="code-block">
+                <code># Test commonly exploited ports</code><br>
+                <code class="command">portqry -n newserver.company.com -p tcp -o 21,22,23,25,53,80,110,135,139,143,443,445,3389</code><br><br>
+                <code>✅ Expected (for web server):</code><br>
+                <code>Port 22: FILTERED (only from jump box)</code><br>
+                <code>Port 80: LISTENING</code><br>
+                <code>Port 443: LISTENING</code><br>
+                <code>Port 21,23,25,110,143: NOT LISTENING (services disabled)</code><br>
+                <code>Port 135,139,445,3389: FILTERED (firewall blocking)</code><br><br>
+                <code>❌ Security Issues:</code><br>
+                <code>Port 23 LISTENING → Telnet still enabled! (Major risk)</code><br>
+                <code>Port 3389 LISTENING → RDP open to internet! (Critical)</code><br>
+                <code>Port 21 LISTENING → FTP exposed (Insecure)</code>
+            </div>
+
+            <p><strong>STEP 3: Test from External Network</strong></p>
+            <div class="code-block">
+                <code># Run from outside your network (home, mobile, cloud VM)</code><br>
+                <code class="command">portqry -n public-ip-address -p tcp -o 22,80,443,3389,445</code><br><br>
+                <code>✅ Expected for DMZ web server:</code><br>
+                <code>Port 80: LISTENING</code><br>
+                <code>Port 443: LISTENING</code><br>
+                <code>Port 22,445,3389: FILTERED (firewall blocking external)</code><br><br>
+                <code>❌ Critical Security Failure:</code><br>
+                <code>Port 3389 LISTENING from internet = Ransomware risk!</code><br>
+                <code>Port 445 LISTENING from internet = Worm risk!</code>
+            </div>
+
+            <p><strong>STEP 4: Verify Internal Segmentation</strong></p>
+            <div class="code-block">
+                <code># Test that database is NOT accessible from DMZ</code><br>
+                <code># (Run from web server in DMZ)</code><br>
+                <code class="command">portqry -n database.internal.local -p tcp -e 3306</code><br><br>
+                <code>✅ Expected: FILTERED (firewall blocks DMZ → Database)</code><br>
+                <code>❌ Security Issue: LISTENING (DMZ can access database!)</code><br><br>
+                <code># Test from internal workstation (should work)</code><br>
+                <code class="command">portqry -n database.internal.local -p tcp -e 3306</code><br>
+                <code>✅ Expected: LISTENING (internal network allowed)</code>
+            </div>
+
+            <h3>🔍 PCI-DSS Compliance Port Check</h3>
+            <div class="code-block">
+                <code># PCI-DSS requires limiting inbound/outbound traffic</code><br>
+                <code># Test cardholder data environment (CDE)</code><br><br>
+                <code class="command">@echo off</code><br>
+                <code class="command">echo === PCI-DSS Port Compliance Check ===</code><br>
+                <code class="command">set CDE_SERVER=payment-server.secure.local</code><br>
+                <code class="command">echo Testing: %CDE_SERVER%</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [CRITICAL] RDP should be BLOCKED from internet</code><br>
+                <code class="command">portqry -n %CDE_SERVER% -p tcp -e 3389</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [CRITICAL] Database should be INTERNAL only</code><br>
+                <code class="command">portqry -n %CDE_SERVER% -p tcp -e 1433</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [CHECK] Only HTTPS should be public</code><br>
+                <code class="command">portqry -n %CDE_SERVER% -p tcp -e 443</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [CRITICAL] Telnet must be DISABLED</code><br>
+                <code class="command">portqry -n %CDE_SERVER% -p tcp -e 23</code><br>
+                <code class="command">echo.</code><br><br>
+                <code class="command">echo [CRITICAL] FTP must be DISABLED</code><br>
+                <code class="command">portqry -n %CDE_SERVER% -p tcp -e 21</code><br>
+                <code class="command">echo.</code><br>
+                <code class="command">echo === Compliance Check Complete ===</code><br>
+                <code class="command">echo Review results for PCI-DSS Requirement 1.2</code><br>
+                <code class="command">pause</code>
+            </div>
+
+            <h3>📝 Security Audit Report Template</h3>
+            <div class="code-block">
+                <code># Save results to file for compliance documentation</code><br>
+                <code class="command">portqry -n server.company.com -p tcp -r 1:1024 -l security-audit.txt -y</code><br><br>
+                <code># Scan all common ports and log</code><br>
+                <code class="command">portqry -n 10.0.0.50 -p tcp -o 21,22,23,25,80,135,139,443,445,1433,3306,3389,5432,8080 -l detailed-audit.log</code><br><br>
+                <code>✅ Creates audit trail for:</code><br>
+                <code>• Compliance audits (PCI, HIPAA, SOC2)</code><br>
+                <code>• Change management documentation</code><br>
+                <code>• Security incident investigation</code><br>
+                <code>• Baseline for future comparisons</code>
+            </div>
+
+            <h3>🎯 Security Risk Assessment Matrix</h3>
+            <table>
+                <tr>
+                    <th>Port Open</th>
+                    <th>From Internet</th>
+                    <th>Risk Level</th>
+                    <th>Required Action</th>
+                </tr>
+                <tr>
+                    <td>21 (FTP)</td>
+                    <td>✅ Yes</td>
+                    <td>🔴 CRITICAL</td>
+                    <td>Block immediately - Use SFTP/FTPS</td>
+                </tr>
+                <tr>
+                    <td>23 (Telnet)</td>
+                    <td>✅ Yes</td>
+                    <td>🔴 CRITICAL</td>
+                    <td>Disable service - Use SSH</td>
+                </tr>
+                <tr>
+                    <td>3389 (RDP)</td>
+                    <td>✅ Yes</td>
+                    <td>🔴 CRITICAL</td>
+                    <td>Block - Use VPN or Jump Box</td>
+                </tr>
+                <tr>
+                    <td>445 (SMB)</td>
+                    <td>✅ Yes</td>
+                    <td>🔴 CRITICAL</td>
+                    <td>Block - WannaCry/Ransomware target</td>
+                </tr>
+                <tr>
+                    <td>1433 (SQL)</td>
+                    <td>✅ Yes</td>
+                    <td>🔴 CRITICAL</td>
+                    <td>Block - Internal only</td>
+                </tr>
+                <tr>
+                    <td>3306 (MySQL)</td>
+                    <td>✅ Yes</td>
+                    <td>🔴 CRITICAL</td>
+                    <td>Block - Internal only</td>
+                </tr>
+                <tr>
+                    <td>22 (SSH)</td>
+                    <td>✅ Yes</td>
+                    <td>🟡 HIGH</td>
+                    <td>Limit to specific IPs + key auth</td>
+                </tr>
+                <tr>
+                    <td>80 (HTTP)</td>
+                    <td>✅ Yes</td>
+                    <td>🟡 MEDIUM</td>
+                    <td>Redirect to HTTPS</td>
+                </tr>
+                <tr>
+                    <td>443 (HTTPS)</td>
+                    <td>✅ Yes</td>
+                    <td>🟢 LOW</td>
+                    <td>OK for web services</td>
+                </tr>
+            </table>
+
+            <h3>⚠️ Common Security Violations Found in Audits</h3>
+            <div class="warning">
+                <strong>TOP 10 PORT SECURITY MISTAKES (2026):</strong><br><br>
+                
+                <strong>1. RDP (3389) Open to Internet</strong><br>
+                Test: <code>telnet public-ip 3389</code><br>
+                Fix: Block at firewall, use VPN<br><br>
+                
+                <strong>2. Database Ports Exposed Externally</strong><br>
+                Test: <code>portqry -n public-ip -p tcp -e 1433,3306,5432</code><br>
+                Fix: Internal network only<br><br>
+                
+                <strong>3. Telnet Still Enabled</strong><br>
+                Test: <code>telnet server 23</code><br>
+                Fix: Disable telnet service completely<br><br>
+                
+                <strong>4. Unencrypted FTP</strong><br>
+                Test: <code>telnet server 21</code><br>
+                Fix: Replace with SFTP or FTPS<br><br>
+                
+                <strong>5. SMB (445) Open to Internet</strong><br>
+                Test: <code>portqry -n public-ip -p tcp -e 445</code><br>
+                Fix: Block at perimeter firewall<br><br>
+                
+                <strong>6. Default Ports on Custom Apps</strong><br>
+                Issue: Everyone scans 8080, 8443<br>
+                Fix: Use non-standard ports + obscurity<br><br>
+                
+                <strong>7. Unnecessary Services Running</strong><br>
+                Test: <code>portqry -n server -p tcp -r 1:10000</code><br>
+                Fix: Disable unused services<br><br>
+                
+                <strong>8. Missing Firewall Rules Between Zones</strong><br>
+                Test: Port accessible from DMZ to internal<br>
+                Fix: Implement zone-based security<br><br>
+                
+                <strong>9. VPN Ports Blocked Accidentally</strong><br>
+                Test: <code>portqry -n vpn -p udp -e 500,4500</code><br>
+                Fix: Allow VPN protocols (IPSec, OpenVPN)<br><br>
+                
+                <strong>10. Monitoring/Management Ports Exposed</strong><br>
+                Test: Ports 9090, 8443, 10000 from internet<br>
+                Fix: Internal network or VPN only
+            </div>
+
+            <h3>✅ Pre-Production Security Checklist</h3>
+            <div class="tip">
+                <strong>Complete this checklist before go-live:</strong><br><br>
+                
+                ☑ <strong>External Scan:</strong> Only required ports open from internet<br>
+                <code>portqry -n public-ip -p tcp -o 80,443</code><br><br>
+                
+                ☑ <strong>Internal Scan:</strong> Verify internal services accessible<br>
+                <code>portqry -n internal-ip -p tcp -o 22,3306,6379</code><br><br>
+                
+                ☑ <strong>Management Access:</strong> Admin ports not internet-facing<br>
+                <code>portqry -n public-ip -p tcp -e 22,3389</code><br>
+                Result should be: FILTERED<br><br>
+                
+                ☑ <strong>Database Security:</strong> DB ports only from app servers<br>
+                Test from: Web server → Database: LISTENING<br>
+                Test from: Internet → Database: FILTERED<br><br>
+                
+                ☑ <strong>Insecure Protocols:</strong> No Telnet, FTP, HTTP auth<br>
+                <code>portqry -n server -p tcp -o 21,23,80</code><br>
+                Port 21,23 should be: NOT LISTENING<br><br>
+                
+                ☑ <strong>Document Everything:</strong> Save audit logs<br>
+                <code>portqry -n server -p tcp -r 1:65535 -l baseline.log</code><br><br>
+                
+                ☑ <strong>Retest After Changes:</strong> Verify fixes didn't break anything<br>
+                Run full port scan again after firewall changes
+            </div>
+
+            <h3>📊 Automated Monthly Security Scan</h3>
+            <div class="code-block">
+                <code># Schedule this monthly for compliance</code><br>
+                <code class="command">@echo off</code><br>
+                <code class="command">set TODAY=%date:~-4,4%%date:~-10,2%%date:~-7,2%</code><br>
+                <code class="command">set LOGFILE=security-scan-%TODAY%.log</code><br><br>
+                <code class="command">echo === Monthly Security Port Scan === > %LOGFILE%</code><br>
+                <code class="command">echo Scan Date: %date% %time% >> %LOGFILE%</code><br>
+                <code class="command">echo. >> %LOGFILE%</code><br><br>
+                <code class="command">echo Scanning external facing servers... >> %LOGFILE%</code><br>
+                <code class="command">portqry -n webserver.public.com -p tcp -r 1:1024 >> %LOGFILE%</code><br>
+                <code class="command">portqry -n mailserver.public.com -p tcp -o 25,587,993 >> %LOGFILE%</code><br><br>
+                <code class="command">echo Scanning database servers... >> %LOGFILE%</code><br>
+                <code class="command">portqry -n db01.internal -p tcp -e 3306 >> %LOGFILE%</code><br>
+                <code class="command">portqry -n db02.internal -p tcp -e 5432 >> %LOGFILE%</code><br><br>
+                <code class="command">echo Scan complete. Review %LOGFILE%</code><br>
+                <code class="command">pause</code>
+            </div>
+
+            <div class="note">
+                <strong>💡 Compliance Documentation:</strong> Many frameworks (PCI-DSS, HIPAA, SOC2, ISO 27001) require regular port scans and documentation. These logs serve as evidence of due diligence. Store them securely for at least 1 year (PCI requires 3 months minimum).
+            </div>
+        </div>
+
+        <button class="download-btn" onclick="downloadGuide()">📥 Download This Guide as HTML</button>
+
+        <footer>
+            © 2026 PortQry & Telnet Beginners Guide | Network Troubleshooting Tools Reference
+        </footer>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all content sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(tabId).classList.add('active');
+            
+            // Highlight active button
+            event.target.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function downloadGuide() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'PortQry-Telnet-Guide-2026.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert('✅ Guide downloaded! Open the HTML file in any browser.');
+        }
+
+        // Search functionality
+        document.getElementById('searchBox').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const sections = document.querySelectorAll('.content-section');
+            
+            sections.forEach(section => {
+                const text = section.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    section.style.display = 'block';
+                } else if (searchTerm === '') {
+                    section.style.display = 'none';
+                    document.getElementById('portqry-intro').classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
